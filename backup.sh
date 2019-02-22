@@ -13,9 +13,20 @@ MYSQL_FILE="/backups/$DATE-mysql-backup.tar.gz"
 mysqldump --all-databases --host=$MYSQL_HOST --port=$MYSQL_PORT --user=$MYSQL_USER --password=$MYSQL_PASSWORD --result-file=$MYSQL_FILE
 echo "Mysql dump completed"
 
+if [[ "$DOCUMENTS_BACKUP" ]]; then
+    echo "Starting documents backup"
+    DOCUMENTS_FILE="/backups/$DATE-documents-backup.tar.gz"
+    tar -zcf $DOCUMENTS_FILE /documents
+    echo "Documents backup completed"
+fi
+
 echo "Start sending backups to FTP server"
 ncftpput -u $FTP_USER -p $FTP_PASSWORD -o useCLNT=0,useMLST=0,useSIZE=0,allowProxyForPORT=1 $FTP_HOST $FTP_BACKUP_FOLDER $MYSQL_FILE
 rm -f $MYSQL_FILE
+if [[ "$DOCUMENTS_BACKUP" ]]; then
+    ncftpput -u $FTP_USER -p $FTP_PASSWORD -o useCLNT=0,useMLST=0,useSIZE=0,allowProxyForPORT=1 $FTP_HOST $FTP_BACKUP_FOLDER $DOCUMENTS_FILE
+    rm -f $DOCUMENTS_FILE
+fi
 echo "Backup sent to FTP server"
 rm -rf backups/
 echo "Backup Job finished"
