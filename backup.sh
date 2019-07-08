@@ -29,4 +29,8 @@ if [[ "$DOCUMENTS_BACKUP" ]]; then
 fi
 echo "Backup sent to FTP server"
 rm -rf backups/
+
+if [["$BACKUP_DAYS"]]; then
+    ./clean-old-backups.sh
+fi
 echo "Backup Job finished"
