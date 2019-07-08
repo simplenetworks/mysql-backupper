@@ -14,9 +14,10 @@ mysqldump --all-databases --host=$MYSQL_HOST --port=$MYSQL_PORT --user=$MYSQL_US
 echo "Mysql dump completed"
 
 if [[ "$DOCUMENTS_BACKUP" ]]; then
-    echo "Starting documents backup"
+    : "${DOCUMENTS_FOLDER:=/documents}" 
+    echo "Starting documents backup from $DOCUMENTS_FOLDER"
     DOCUMENTS_FILE="/backups/$DATE-documents-backup.tar.gz"
-    tar -zcf $DOCUMENTS_FILE /documents
+    tar -zcf $DOCUMENTS_FILE $DOCUMENTS_FOLDER
     echo "Documents backup completed"
 fi
 
