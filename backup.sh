@@ -31,7 +31,10 @@ fi
 echo "Backup sent to FTP server"
 rm -rf backups/
 
-if [["$BACKUP_DAYS"]]; then
-    ./clean-old-backups.sh
+if [[ "$BACKUP_DAYS" ]]; then
+  echo "Start cleaning backups older than $BACKUP_DAYS days"
+  CLEAN_OLD_SCRIPT_PATH="/clean-old-backups.sh"
+  "$CLEAN_OLD_SCRIPT_PATH"
 fi
+
 echo "Backup Job finished"
