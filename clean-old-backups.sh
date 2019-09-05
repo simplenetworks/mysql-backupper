@@ -48,11 +48,11 @@ for ((FNO = 0; FNO < ${#lista[@]}; FNO += 9)); do
 EOMYF
   fi
 
-  # echo Month ${lista[$(expr $FNO+5)]}
-  # echo MM $MM
-  if [[ ${lista[$(expr $FNO+5)]}=$MM ]]; then
-    # echo Day ${lista[$(expr $FNO+6)]#0}
-    # echo DD: $DD
+  #echo Month ${lista[$(expr $FNO+5)]}
+  #echo MM $MM
+  if [ ${lista[$(expr $FNO+5)]} = $MM ]; then
+    #echo Day ${lista[$(expr $FNO+6)]#0}
+    #echo DD: $DD
     if [[ ${lista[$(expr $FNO+6)]#0} -lt $DD ]]; then
       # Remove this file
       echo "Removing ${lista[$(expr $FNO+8)]}"
