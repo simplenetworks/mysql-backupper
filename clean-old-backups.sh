@@ -50,8 +50,7 @@ EOMYF
 
   # echo Month ${lista[$(expr $FNO+5)]}
   # echo MM $MM
-  #if [ ${lista[`expr $FNO+5`]}=$MM ];
-  if ((FILE_MONTH == MONTH_NUMBER)); then
+  if [[ ${lista[$(expr $FNO+5)]}=$MM ]]; then
     # echo Day ${lista[$(expr $FNO+6)]#0}
     # echo DD: $DD
     if [[ ${lista[$(expr $FNO+6)]#0} -lt $DD ]]; then
