@@ -9,23 +9,23 @@ DATE=$(date +%Y%m%d_%H%M%S)
 mkdir -p /backups
 
 echo "Starting mysql dump"
-MYSQL_FILE="/backups/$DATE-mysql-backup.tar.gz"
+MYSQL_FILE="/backups/mysql-backup.tar.gz"
 mysqldump --all-databases --host=$MYSQL_HOST --port=$MYSQL_PORT --user=$MYSQL_USER --password=$MYSQL_PASSWORD --result-file=$MYSQL_FILE
 echo "Mysql dump completed"
 
 if [[ "$DOCUMENTS_BACKUP" ]]; then
-    : "${DOCUMENTS_FOLDER:=/documents}" 
+    : "${DOCUMENTS_FOLDER:=/documents}"
     echo "Starting documents backup from $DOCUMENTS_FOLDER"
-    DOCUMENTS_FILE="/backups/$DATE-documents-backup.tar.gz"
+    DOCUMENTS_FILE="/backups/documents-backup.tar.gz"
     tar -zcf $DOCUMENTS_FILE $DOCUMENTS_FOLDER
     echo "Documents backup completed"
 fi
 
 echo "Start sending backups to FTP server"
-ncftpput -u $FTP_USER -p $FTP_PASSWORD -o useCLNT=0,useMLST=0,useSIZE=0,allowProxyForPORT=1 $FTP_HOST $FTP_BACKUP_FOLDER $MYSQL_FILE
+ncftpput -C -u $FTP_USER -p $FTP_PASSWORD -o useCLNT=0,useMLST=0,useSIZE=0,allowProxyForPORT=1 $FTP_HOST $MYSQL_FILE $FTP_BACKUP_FOLDER/$DATE-mysql-backup.tar.gz
 rm -f $MYSQL_FILE
 if [[ "$DOCUMENTS_BACKUP" ]]; then
-    ncftpput -u $FTP_USER -p $FTP_PASSWORD -o useCLNT=0,useMLST=0,useSIZE=0,allowProxyForPORT=1 $FTP_HOST $FTP_BACKUP_FOLDER $DOCUMENTS_FILE
+    ncftpput -C -u $FTP_USER -p $FTP_PASSWORD -o useCLNT=0,useMLST=0,useSIZE=0,allowProxyForPORT=1 $FTP_HOST $DOCUMENTS_FILE $FTP_BACKUP_FOLDER/$DATE-documetns-backup.tar.gz
     rm -f $DOCUMENTS_FILE
 fi
 echo "Backup sent to FTP server"
